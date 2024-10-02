@@ -29,28 +29,26 @@ def index():
 
 @app.route('/showSummary', methods=['POST'])
 def showSummary():
-    email = request.form['email']
+    # Vérifier si l'email est dans la liste des clubs
+    club = next((club for club in clubs if club['email'] == request.form['email']), None)
     
-    # Vérifier si l'email correspond à un club existant
-    club = next((club for club in clubs if club['email'] == email), None)
-    
-    if club:
-        # Si l'e-mail est correct, afficher la page de bienvenue
-        return render_template('welcome.html', club=club)
-    else:
-        # Si l'e-mail n'est pas trouvé, afficher un message d'erreur et rester sur la même page
-        flash("Erreur : Email non trouvé. Veuillez réessayer.")
-        return redirect(url_for('index'))
+    if club is None:
+        # Si l'email est incorrect, afficher un message d'erreur
+        flash ("Email incorrect") 
+        return render_template('index.html')  # Redirige vers la page de connexion ou d'accueil
+
+    return render_template('welcome.html', club=club, competitions=competitions)
+
 
 @app.route('/book/<competition>/<club>')
-def book(competition, club):
-    foundClub = next((c for c in clubs if c['name'] == club), None)
-    foundCompetition = next((c for c in competitions if c['name'] == competition), None)
+def book(competition,club):
+    foundClub = [c for c in clubs if c['name'] == club][0]
+    foundCompetition = [c for c in competitions if c['name'] == competition][0]
     if foundClub and foundCompetition:
-        return render_template('booking.html', club=foundClub, competition=foundCompetition)
+        return render_template('booking.html',club=foundClub,competition=foundCompetition)
     else:
-        flash("Something went wrong-please try again.")
-        return redirect(url_for('showSummary'))
+        flash("Something went wrong-please try again")
+        return render_template('welcome.html', club=club, competitions=competitions)
 
 
 @app.route('/purchasePlaces', methods=['POST'])
