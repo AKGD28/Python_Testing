@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ competition['name'] }} - Competition Details</title>
+</head>
+<body>
+    <h1>Competition: {{ competition['name'] }}</h1>
+
+    <!-- Details of the competition -->
+    <p>Date: {{ competition['date'] }}</p>
+    <p>Number of places available: {{ competition['numberOfPlaces'] }}</p>
+
+    <!-- Display club details (optional) -->
+    <h2>Club: {{ club['name'] }}</h2>
+    <p>Points available: {{ club['points'] }}</p>
+
+    <!-- Form for booking places -->
+    <form action="/purchasePlaces" method="post">
+        <input type="hidden" name="competition" value="{{ competition['name'] }}">
+        <input type="hidden" name="club" value="{{ club['name'] }}">
+
+        <label for="places">How many places do you want to book?</label>
+        <input type="number" name="places" id="places" min="1" max="{{ competition['numberOfPlaces'] }}" required>
+
+        <button type="submit">Book Places</button>
+    </form>
+
+    <!-- Flash message for errors or success -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul style="color: red;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</body>
+</html>
