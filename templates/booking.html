@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -6,12 +7,31 @@
 </head>
 <body>
     <h2>{{competition['name']}}</h2>
-    Places available: {{competition['numberOfPlaces']}}
+    <p>Places available: {{competition['numberOfPlaces']}}</p>
+
+    <!-- Form for booking places -->
     <form action="/purchasePlaces" method="post">
+        <!-- Hidden inputs to pass the competition and club data -->
         <input type="hidden" name="club" value="{{club['name']}}">
         <input type="hidden" name="competition" value="{{competition['name']}}">
-        <label for="places">How many places?</label><input type="number" name="places" id=""/>
+
+        <!-- Input for selecting the number of places, restricted to positive numbers -->
+        <label for="places">How many places?</label>
+        <input type="number" name="places" id="places" min="1" max="{{competition['numberOfPlaces']}}" required>
+        
+        <!-- Submit button for booking -->
         <button type="submit">Book</button>
     </form>
+
+    <!-- Flash message for errors, if any -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+                {% for message in messages %}
+                    <li style="color: red;">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 </body>
 </html>
