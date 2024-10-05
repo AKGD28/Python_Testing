@@ -87,6 +87,11 @@ def purchasePlaces():
               f"Vous avez déjà réservé {total_reserved} places.")
         return render_template('booking.html', club=club, competition=competition)
 
+    # NEW CODE: Prevent any reservations if there are fewer than 12 places remaining in the competition
+    if int(competition['numberOfPlaces']) < 12:
+        flash("Impossible : Vous ne pouvez plus réserver car il reste moins de 12 places dans la compétition.")
+        return render_template('booking.html', club=club, competition=competition)
+
     if placesRequired > 12:
         flash("Erreur : Vous ne pouvez pas réserver plus de 12 places à la fois.")
         return render_template('booking.html', club=club, competition=competition)

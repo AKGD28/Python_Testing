@@ -4,34 +4,59 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking for {{competition['name']}} || GUDLFT</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h2>{{competition['name']}}</h2>
-    <p>Places available: {{competition['numberOfPlaces']}}</p>
+<body class="bg-light">
 
-    <!-- Form for booking places -->
-    <form action="/purchasePlaces" method="post">
-        <!-- Hidden inputs to pass the competition and club data -->
-        <input type="hidden" name="club" value="{{club['name']}}">
-        <input type="hidden" name="competition" value="{{competition['name']}}">
+    <div class="container py-5">
+        <!-- Title Section -->
+        <div class="text-center mb-4">
+            <h2 class="display-4">{{competition['name']}}</h2>
+            <p class="lead">Places available: {{competition['numberOfPlaces']}}</p>
+        </div>
 
-        <!-- Input for selecting the number of places, restricted to positive numbers -->
-        <label for="places">How many places?</label>
-        <input type="number" name="places" id="places" min="1" max="{{competition['numberOfPlaces']}}" required>
-        
-        <!-- Submit button for booking -->
-        <button type="submit">Book</button>
-    </form>
+        <!-- Booking Form -->
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <form action="/purchasePlaces" method="post">
+                            <!-- Hidden inputs to pass the competition and club data -->
+                            <input type="hidden" name="club" value="{{club['name']}}">
+                            <input type="hidden" name="competition" value="{{competition['name']}}">
 
-    <!-- Flash message for errors, if any -->
-    {% with messages = get_flashed_messages() %}
+                            <!-- Input for selecting the number of places -->
+                            <div class="mb-3">
+                                <label for="places" class="form-label">How many places?</label>
+                                <input type="number" class="form-control" name="places" id="places" min="1" max="{{competition['numberOfPlaces']}}" required>
+                            </div>
+
+                            <!-- Submit button -->
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success btn-lg">Book</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Flash message for errors -->
+        {% with messages = get_flashed_messages() %}
         {% if messages %}
-            <ul>
-                {% for message in messages %}
-                    <li style="color: red;">{{ message }}</li>
-                {% endfor %}
-            </ul>
+            <div class="alert alert-danger mt-4">
+                <ul class="mb-0">
+                    {% for message in messages %}
+                    <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
-    {% endwith %}
+        {% endwith %}
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
